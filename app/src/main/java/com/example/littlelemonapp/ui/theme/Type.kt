@@ -2,9 +2,11 @@ package com.example.littlelemonapp.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.example.littlelemonapp.R
 
 // Set of Material typography styles to start with
 val Typography = Typography(
@@ -14,21 +16,99 @@ val Typography = Typography(
         fontSize = 16.sp,
         lineHeight = 24.sp,
         letterSpacing = 0.5.sp
-    )
-    /* Other default text styles to override
+    ),
+)
+
+val MarkaziText_Medium = Font(R.font.markazitext_medium, FontWeight.W500)
+val MarkaziText_Regular = Font(R.font.markazitext_regular, FontWeight.W400)
+
+val Karla_Regular = Font(R.font.karla_regular, FontWeight.W400)
+val Karla_Medium = Font(R.font.karla_medium, FontWeight.W500)
+val Karla_Bold = Font(R.font.karla_bold, FontWeight.W700)
+val Karla_ExtraBold = Font(R.font.karla_extrabold, FontWeight.W800)
+
+
+val TitleTypography = Typography(
     titleLarge = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
-        fontSize = 22.sp,
+        fontFamily = FontFamily(Font(R.font.markazitext_medium, FontWeight.W500)),
+        fontWeight = FontWeight.W500,
+        fontSize = 64.sp,
+        lineHeight = 28.sp,
+        letterSpacing = 0.sp
+    )
+)
+
+val SubTitleTypography = Typography(
+    titleMedium = TextStyle(
+        fontFamily = FontFamily(Font(R.font.markazitext_regular, FontWeight.W400)),
+        fontWeight = FontWeight.W400,
+        fontSize = 40.sp,
+        lineHeight = 28.sp,
+        letterSpacing = 0.sp
+    )
+)
+
+val ParagraphTypography = Typography(
+    titleMedium = TextStyle(
+        fontFamily = FontFamily(Font(R.font.karla_regular, FontWeight.W400)),
+        fontWeight = FontWeight.W400,
+        fontSize =42.sp,
         lineHeight = 28.sp,
         letterSpacing = 0.sp
     ),
-    labelSmall = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Medium,
-        fontSize = 11.sp,
-        lineHeight = 16.sp,
-        letterSpacing = 0.5.sp
+    bodyMedium = TextStyle(
+        fontFamily = FontFamily(Font(R.font.karla_medium, FontWeight.W500)),
+        fontWeight = FontWeight.W500,
+        fontSize = 18.sp,
+        lineHeight = 28.sp,
+        letterSpacing = 0.sp
+    ),
+    bodySmall = TextStyle(
+        fontFamily = FontFamily(Font(R.font.karla_regular, FontWeight.W400)),
+        fontWeight = FontWeight.W400,
+        fontSize = 16.sp,
+        lineHeight = 28.sp,
+        letterSpacing = 0.sp
     )
-    */
 )
+
+val SectionTitleTypography = Typography(
+    titleMedium = TextStyle(
+        fontFamily = FontFamily(Font(R.font.karla_extrabold, FontWeight.W800)),
+        fontWeight = FontWeight.W800,
+        fontSize = 20.sp,
+        lineHeight = 28.sp,
+        letterSpacing = 0.sp
+    )
+)
+
+val WeekSpecialSectionTypography = Typography(
+    titleMedium = TextStyle(
+        fontFamily = FontFamily(Font(R.font.karla_extrabold, FontWeight.W800)),
+        fontWeight = FontWeight.W800,
+        fontSize = 16.sp,
+        lineHeight = 28.sp,
+        letterSpacing = 0.sp
+    )
+)
+
+val CardTitleTypography = Typography(
+    titleMedium = TextStyle(
+        fontFamily = FontFamily(Font(R.font.karla_bold, FontWeight.W700)),
+        fontWeight = FontWeight.W700,
+        fontSize = 16.sp,
+        lineHeight = 28.sp,
+        letterSpacing = 0.sp
+    )
+)
+
+val HighlightTextTypography = Typography(
+    titleMedium = TextStyle(
+        fontFamily = FontFamily(Font(R.font.karla_medium, FontWeight.W500)),
+        fontWeight = FontWeight.W500,
+        fontSize = 16.sp,
+        lineHeight = 28.sp,
+        letterSpacing = 0.sp
+    )
+)
+
