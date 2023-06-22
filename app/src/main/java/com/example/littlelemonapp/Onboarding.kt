@@ -1,5 +1,8 @@
 package com.example.littlelemonapp
 
+import android.content.Context
+import android.content.SharedPreferences
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -24,12 +27,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.example.littlelemonapp.ui.theme.Green
 import com.example.littlelemonapp.ui.theme.Karla_Bold
 import com.example.littlelemonapp.ui.theme.Karla_ExtraBold
@@ -39,7 +44,7 @@ import com.example.littlelemonapp.ui.theme.Yellow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Onboarding() {
+fun OnBoarding(navController: NavHostController, sharedPreferences: SharedPreferences) {
 
     var firstName by remember {
         mutableStateOf("")
@@ -54,6 +59,8 @@ fun Onboarding() {
     }
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
+
+        val context = LocalContext.current
 
         Image(painter = painterResource(id = R.drawable.logo),
             contentDescription = "logo",
@@ -124,7 +131,9 @@ fun Onboarding() {
                     unfocusedBorderColor = Green
                 ))
 
-            Button(onClick = { /*TODO*/ },
+            Button(onClick = {
+                onClick(context, sharedPreferences, navController, firstName, lastName, email)
+                             },
                 Modifier
                     .fillMaxWidth()
                     .padding(top = 110.dp, bottom = 10.dp),
@@ -142,18 +151,14 @@ fun Onboarding() {
     }
 }
 
-@Composable
-fun TextFieldLabel(label: String) {
+fun onClick(context: Context, sharedPreferences: SharedPreferences, navController: NavHostController,
+            firstName: String, lastName: String, email: String)
+{
 
-    Text(text = label,
-        fontFamily = FontFamily(Karla_Bold),
-        fontSize = 16.sp,
-        color = Green
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun OnboardingPreview() {
-    Onboarding()
+    if (firstName.isNotBlank() && lastName.isNotBlank() && email.isNotBlank()) {
+        sharedPreferences.edit().putBoolean("isLogin", true).commit()
+        navController.navigate(com.example.littlelemonapp.navigation.Home.route)
+    } else {
+        Toast.makeText(context, "Registration unsuccessful. Please enter all data.", Toast.LENGTH_SHORT).show()
+    }
 }
