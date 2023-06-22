@@ -19,14 +19,16 @@ val Typography = Typography(
         lineHeight = 24.sp,
         letterSpacing = 0.5.sp
     ),
-//    labelSmall = TextStyle(
-//        fontFamily = FontFamily.Default,
-//        fontWeight = FontWeight.Medium,
-//        fontSize = 11.sp,
-//        lineHeight = 16.sp,
-//        letterSpacing = 0.5.sp
-//    )
 )
+
+val MarkaziText_Medium = Font(R.font.markazitext_medium, FontWeight.W500)
+val MarkaziText_Regular = Font(R.font.markazitext_regular, FontWeight.W400)
+
+val Karla_Regular = Font(R.font.karla_regular, FontWeight.W400)
+val Karla_Medium = Font(R.font.karla_medium, FontWeight.W500)
+val Karla_Bold = Font(R.font.karla_bold, FontWeight.W700)
+val Karla_ExtraBold = Font(R.font.karla_extrabold, FontWeight.W800)
+
 
 val TitleTypography = Typography(
     titleLarge = TextStyle(
