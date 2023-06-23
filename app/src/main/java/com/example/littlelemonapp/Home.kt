@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -47,8 +48,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
 import com.example.littlelemonapp.model.MenuDatabase
+import com.example.littlelemonapp.model.MenuItemEntity
 import com.example.littlelemonapp.ui.theme.Green
 import com.example.littlelemonapp.ui.theme.Karla_Bold
 import com.example.littlelemonapp.ui.theme.Karla_ExtraBold
@@ -57,14 +62,13 @@ import com.example.littlelemonapp.ui.theme.LightGrey_highlight
 import com.example.littlelemonapp.ui.theme.MarkaziText_Medium
 import com.example.littlelemonapp.ui.theme.MarkaziText_Regular
 import com.example.littlelemonapp.ui.theme.Yellow
-import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Home() {
+fun Home(navController: NavHostController, menuItems: MutableLiveData<List<MenuItemEntity>>) {
 
-    val menuCategory = listOf<String>("Starters", "Mains", "Desserts", "Sides")
-    //val menuItems by database.menuDao().getAllMenuItems().observeAsState(initial = emptyList())
+    val menuCategory = listOf("Starters", "Mains", "Desserts", "Sides")
+    val menuItems by menuItems.observeAsState(initial = emptyList())
 
     Column(horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
@@ -83,7 +87,7 @@ fun Home() {
                     .padding(start = 46.dp, end = 40.dp)
                     .size(50.dp)
                     .clickable {
-                        //navController.navigate(com.example.littlelemonapp.navigation.Profile.route)
+                        navController.navigate(com.example.littlelemonapp.navigation.Profile.route)
                     })
         }
         Surface(color = Green) {
@@ -101,7 +105,7 @@ fun Home() {
                     fontSize = 40.sp,
                     color = Color.White)
 
-                Row(modifier = Modifier.fillMaxWidth(),
+                Row(modifier = Modifier.fillMaxWidth().padding(bottom = 29.dp),
                 horizontalArrangement = Arrangement.SpaceBetween) {
                     Text(text = stringResource(id = R.string.description),
                         fontFamily = FontFamily(Karla_Medium),
@@ -134,7 +138,7 @@ fun Home() {
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 29.dp, bottom = 25.dp)
+                        .padding(bottom = 25.dp)
                         .height(62.dp),
                     shape = RoundedCornerShape(8.dp)
                 )
@@ -156,7 +160,7 @@ fun Home() {
                     .padding(start = 10.dp, end = 10.dp)
             ) {
                 items(menuCategory) {
-                    menuCategoryItem(it)
+                    MenuCategoryItem(it)
                 }
             }
 
@@ -164,15 +168,36 @@ fun Home() {
                 modifier = Modifier.padding(top = 30.dp, bottom = 30.dp))
         }
 
-        Row() {
-
+        LazyColumn {
+            items(menuItems) {
+                Dish(it)
+            }
         }
 
     }
 }
 
+@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun menuCategoryItem(category: String) {
+fun Dish(item: MenuItemEntity) {
+
+    println(item)
+
+    Column {
+        Text(text = item.title)
+        Row {
+           Column() {
+               Text(text = item.description)
+               Text(text = item.price)
+           }
+            GlideImage(model = item.image, contentDescription = item.title)
+        }
+    }
+
+}
+
+@Composable
+fun MenuCategoryItem(category: String) {
     Surface(shape = RoundedCornerShape(12.dp), color = LightGrey_highlight) {
         Text(
             text = category, fontFamily = FontFamily(
@@ -186,8 +211,10 @@ fun menuCategoryItem(category: String) {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun HomePreview() {
-    Home()
-}
+
+
+//@Preview(showBackground = true)
+//@Composable
+//fun HomePreview() {
+//    Home()
+//}

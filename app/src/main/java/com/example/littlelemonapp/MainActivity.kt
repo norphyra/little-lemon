@@ -56,7 +56,15 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         lifecycleScope.launch{
-            getMenu()
+            val response = getMenu()
+
+            withContext(IO) {
+                database.menuDao().saveMenuItem(response)
+            }
+
+            runOnUiThread {
+                menuLiveData.value = response
+            }
         }
 
         setContent {
@@ -69,21 +77,17 @@ class MainActivity : ComponentActivity() {
 
                     val navController = rememberNavController()
 
-                    Navigation(navController = navController, sharedPreferences = sharedPreferences, database = database)
+                    Navigation(navController = navController, sharedPreferences = sharedPreferences, menuItems = menuLiveData)
 
                 }
             }
         }
     }
 
-    private suspend fun getMenu() {
+    private suspend fun getMenu(): List<MenuItemEntity> {
 
-        withContext(IO) {
-            val menuItems: List<MenuItemEntity> = client.get("https://raw.githubusercontent.com/Meta-Mobile-Developer-PC/Working-With-Data-API/main/menu.json")
-                .body<MenuNetwork>().menu
-
-            database.menuDao().saveMenuItem(menuItems)
-        }
+        return client.get("https://raw.githubusercontent.com/Meta-Mobile-Developer-PC/Working-With-Data-API/main/menu.json")
+            .body<MenuNetwork>().menu
 
     }
 }

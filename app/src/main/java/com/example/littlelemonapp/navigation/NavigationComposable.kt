@@ -15,7 +15,7 @@ import com.example.littlelemonapp.model.MenuDatabase
 import com.example.littlelemonapp.model.MenuItemEntity
 
 @Composable
-fun Navigation(navController: NavHostController, sharedPreferences: SharedPreferences, database: MenuDatabase) {
+fun Navigation(navController: NavHostController, sharedPreferences: SharedPreferences, menuItems: MutableLiveData<List<MenuItemEntity>>) {
 
     var startDestination = Onboarding.route
 
@@ -28,8 +28,7 @@ fun Navigation(navController: NavHostController, sharedPreferences: SharedPrefer
             OnBoarding(navController = navController, sharedPreferences = sharedPreferences)
         }
         composable(Home.route) {
-            Home()
-            //Home(navController = navController, database = database)
+            Home(navController = navController, menuItems)
         }
         composable(Profile.route) {
             Profile(navController = navController, sharedPreferences = sharedPreferences)
