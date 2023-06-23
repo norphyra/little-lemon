@@ -42,6 +42,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -127,14 +128,13 @@ fun Home(navController: NavHostController, menuItems: MutableLiveData<List<MenuI
                     Column(Modifier.fillMaxWidth()) {
 
                         Row(horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically,
+                        verticalAlignment = Alignment.Bottom,
                         modifier = Modifier.fillMaxWidth()) {
                             Column() {
 
                                 Text(text = stringResource(id = R.string.city), fontFamily = FontFamily(MarkaziText_Regular),
                                     fontSize = 40.sp,
-                                    color = Color.White,
-                                modifier = Modifier.padding(bottom = 12.dp))
+                                    color = Color.White)
 
                                 Text(text = stringResource(id = R.string.description),
                                     fontFamily = FontFamily(Karla_Medium),
@@ -143,14 +143,16 @@ fun Home(navController: NavHostController, menuItems: MutableLiveData<List<MenuI
                                     color = Color.White,
                                     modifier = Modifier
                                         .fillMaxWidth(0.6f)
-                                        .fillMaxHeight(0.5f))
+                                        .fillMaxHeight(0.19f)
+                                        .padding(top = 16.dp))
                             }
                             Image(painter = painterResource(id = R.drawable.hero_image), contentDescription = "hero image",
-                                Modifier
-                                    .clip(RoundedCornerShape(16.dp))
-                                    .size(130.dp),
                                 contentScale = ContentScale.Crop,
-                                alignment = Alignment.Center)
+                                alignment = Alignment.Center,
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(16.dp))
+                                    .size(130.dp)
+                            )
                         }
                     }
                 }
@@ -164,7 +166,8 @@ fun Home(navController: NavHostController, menuItems: MutableLiveData<List<MenuI
                             text = "Enter search phrase",
                             color = Green,
                             fontFamily = FontFamily(Karla_Medium),
-                            fontSize = 18.sp
+                            fontSize = 18.sp,
+                            textAlign = TextAlign.Center
                         )
                     },
                     leadingIcon = {
@@ -180,34 +183,32 @@ fun Home(navController: NavHostController, menuItems: MutableLiveData<List<MenuI
 
         }
 
-//        Column(modifier = Modifier.padding(start = 22.dp, end = 22.dp)) {
-//            Text(text = "ORDER FOR DELIVERY!", fontFamily = FontFamily(
-//                Karla_ExtraBold),
-//                fontSize = 24.sp,
-//                color = Color.Black,
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .padding(start = 10.dp, top = 40.dp, bottom = 15.dp))
-//
-//            LazyRow(horizontalArrangement = Arrangement.SpaceBetween,
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .padding(start = 10.dp, end = 10.dp)
-//            ) {
-//                items(menuCategory) {
-//                    MenuCategoryItem(it)
-//                }
-//            }
-//
-//            Divider(thickness = 1.dp, color = LightGrey_highlight,
-//                modifier = Modifier.padding(top = 30.dp, bottom = 15.dp))
-//        }
-//
-//        LazyColumn {
-//            items(menuItems) {
-//                Dish(it)
-//            }
-//        }
+        Text(text = "ORDER FOR DELIVERY!", fontFamily = FontFamily(
+            Karla_ExtraBold),
+            fontSize = 24.sp,
+            color = Color.Black,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 20.dp, top = 40.dp, bottom = 15.dp))
+
+        LazyRow(horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 20.dp, end = 20.dp)
+        ) {
+            items(menuCategory) {
+                MenuCategoryItem(it)
+            }
+        }
+
+        Divider(thickness = 1.dp, color = LightGrey_highlight,
+            modifier = Modifier.padding(top = 30.dp, bottom = 15.dp, start = 20.dp, end = 20.dp))
+
+        LazyColumn(modifier = Modifier.padding(start = 20.dp, end = 20.dp)) {
+            items(menuItems) {
+                Dish(it)
+            }
+        }
 
     }
 }
@@ -215,8 +216,6 @@ fun Home(navController: NavHostController, menuItems: MutableLiveData<List<MenuI
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun Dish(item: MenuItemNetwork) {
-
-    println(item)
 
     Column {
         Text(text = item.title,
@@ -260,7 +259,10 @@ fun MenuCategoryItem(category: String) {
 fun HomePreview() {
     val navController = rememberNavController()
 
-    val items = MutableLiveData(listOf(MenuItemNetwork(0, "", "", "", "", "")))
+    val items = MutableLiveData(listOf(
+        MenuItemNetwork(1, "Greek Salad", "The famous greek salad of crispy lettuce, peppers, olives, our Chicago.", "10", "https://github.com/Meta-Mobile-Developer-PC/Working-With-Data-API/blob/main/images/greekSalad.jpg?raw=true", "starters"),
+        MenuItemNetwork(2, "Greek Salad", "The famous greek salad of crispy lettuce, peppers, olives, our Chicago.", "10", "https://github.com/Meta-Mobile-Developer-PC/Working-With-Data-API/blob/main/images/greekSalad.jpg?raw=true", "starters"),
+        MenuItemNetwork(3, "Greek Salad", "The famous greek salad of crispy lettuce, peppers, olives, our Chicago.", "10", "https://github.com/Meta-Mobile-Developer-PC/Working-With-Data-API/blob/main/images/greekSalad.jpg?raw=true", "starters")))
 
 
     Home(navController, items)
