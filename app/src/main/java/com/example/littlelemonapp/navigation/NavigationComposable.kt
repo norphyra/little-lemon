@@ -25,10 +25,10 @@ fun Navigation(navController: NavHostController, sharedPreferences: SharedPrefer
             OnBoarding(navController = navController, sharedPreferences = sharedPreferences)
         }
         composable(Home.route) {
-            Home()
+            Home(navController = navController)
         }
         composable(Profile.route) {
-            Profile()
+            Profile(navController = navController, sharedPreferences = sharedPreferences)
         }
     }
 }

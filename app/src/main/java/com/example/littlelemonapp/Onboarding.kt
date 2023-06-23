@@ -17,6 +17,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -90,7 +91,7 @@ fun OnBoarding(navController: NavHostController, sharedPreferences: SharedPrefer
 
             Text(text = "First name",
                 fontFamily = FontFamily(Karla_Bold),
-                fontSize = 16.sp,
+                fontSize = 14.sp,
                 color = Green,
                 modifier = Modifier.padding(bottom = 4.dp)
             )
@@ -103,7 +104,7 @@ fun OnBoarding(navController: NavHostController, sharedPreferences: SharedPrefer
 
             Text(text = "Last name",
                 fontFamily = FontFamily(Karla_Bold),
-                fontSize = 16.sp,
+                fontSize = 14.sp,
                 color = Green,
                 modifier = Modifier.padding(top = 40.dp)
             )
@@ -118,7 +119,7 @@ fun OnBoarding(navController: NavHostController, sharedPreferences: SharedPrefer
 
             Text(text = "Email",
                 fontFamily = FontFamily(Karla_Bold),
-                fontSize = 16.sp,
+                fontSize = 14.sp,
                 color = Green,
                 modifier = Modifier.padding(top = 40.dp)
             )
@@ -156,7 +157,13 @@ fun onClick(context: Context, sharedPreferences: SharedPreferences, navControlle
 {
 
     if (firstName.isNotBlank() && lastName.isNotBlank() && email.isNotBlank()) {
-        sharedPreferences.edit().putBoolean("isLogin", true).commit()
+        with(sharedPreferences.edit()) {
+            putBoolean("isLogin", true)
+            putString("first name", firstName)
+            putString("last name", lastName)
+            putString("email", email)
+            apply()
+        }
         navController.navigate(com.example.littlelemonapp.navigation.Home.route)
     } else {
         Toast.makeText(context, "Registration unsuccessful. Please enter all data.", Toast.LENGTH_SHORT).show()
