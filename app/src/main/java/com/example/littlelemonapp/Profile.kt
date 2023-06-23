@@ -15,53 +15,36 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import com.example.littlelemonapp.navigation.Onboarding
 import com.example.littlelemonapp.ui.theme.Green
 import com.example.littlelemonapp.ui.theme.Karla_Bold
 import com.example.littlelemonapp.ui.theme.Karla_ExtraBold
 import com.example.littlelemonapp.ui.theme.Karla_Regular
+import com.example.littlelemonapp.ui.theme.LightGrey_highlight
 import com.example.littlelemonapp.ui.theme.RedOrange_secondary
 import com.example.littlelemonapp.ui.theme.Yellow
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun OnBoarding(navController: NavHostController, sharedPreferences: SharedPreferences) {
-
-    var firstName by remember {
-        mutableStateOf("")
-    }
-
-    var lastName by remember {
-        mutableStateOf("")
-    }
-
-    var email by remember {
-        mutableStateOf("")
-    }
-
+fun Profile(navController: NavHostController, sharedPreferences: SharedPreferences) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-
-        val context = LocalContext.current
 
         Image(painter = painterResource(id = R.drawable.logo),
             contentDescription = "logo",
@@ -69,20 +52,8 @@ fun OnBoarding(navController: NavHostController, sharedPreferences: SharedPrefer
                 .height(100.dp)
                 .fillMaxWidth(0.5f))
 
-        Row(horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .background(Green)
-                .height(110.dp)
-                .fillMaxWidth()) {
-            Text(text = "Let's get to know you", color = Color.White,
-                fontFamily = FontFamily(Karla_Regular),
-                fontSize = 24.sp
-            )
-        }
-
         Column(modifier = Modifier
-            .padding(start = 25.dp, end = 20.dp)) {
+            .padding(start = 25.dp, end = 20.dp, top = 80.dp)) {
             Text(text = "Personal information", color = Color.Black,
                 fontFamily = FontFamily(Karla_ExtraBold),
                 fontSize = 18.sp,
@@ -95,12 +66,7 @@ fun OnBoarding(navController: NavHostController, sharedPreferences: SharedPrefer
                 color = Green,
                 modifier = Modifier.padding(bottom = 4.dp)
             )
-            OutlinedTextField(value = firstName, onValueChange = {firstName = it},
-                modifier = Modifier.fillMaxWidth(),
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = Green,
-                unfocusedBorderColor = Green
-            ))
+            UserDataRow(text = sharedPreferences.getString("first name", "").toString())
 
             Text(text = "Last name",
                 fontFamily = FontFamily(Karla_Bold),
@@ -108,14 +74,7 @@ fun OnBoarding(navController: NavHostController, sharedPreferences: SharedPrefer
                 color = Green,
                 modifier = Modifier.padding(top = 40.dp)
             )
-            OutlinedTextField(value = lastName, onValueChange = {lastName = it},
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 4.dp),
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = Green,
-                    unfocusedBorderColor = Green
-                ))
+            UserDataRow(text = sharedPreferences.getString("last name", "").toString())
 
             Text(text = "Email",
                 fontFamily = FontFamily(Karla_Bold),
@@ -123,28 +82,21 @@ fun OnBoarding(navController: NavHostController, sharedPreferences: SharedPrefer
                 color = Green,
                 modifier = Modifier.padding(top = 40.dp)
             )
-            OutlinedTextField(value = email, onValueChange = {email = it},
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 4.dp),
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = Green,
-                    unfocusedBorderColor = Green
-                ))
+            UserDataRow(text = sharedPreferences.getString("email", "").toString())
 
             Button(onClick = {
-                onClick(context, sharedPreferences, navController, firstName, lastName, email)
-                             },
+                onClick(navController, sharedPreferences)
+            },
                 Modifier
                     .fillMaxWidth()
-                    .padding(top = 110.dp, bottom = 10.dp),
+                    .padding(top = 160.dp, bottom = 10.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Yellow),
                 shape = RoundedCornerShape(8.dp),
                 border = BorderStroke(1.dp, RedOrange_secondary)
             ) {
-                Text(text = "Register", textAlign = TextAlign.Center,
-                color = Color.Black,
-                fontFamily = FontFamily(Karla_Regular),
+                Text(text = "Log out", textAlign = TextAlign.Center,
+                    color = Color.Black,
+                    fontFamily = FontFamily(Karla_Bold),
                     fontSize = 16.sp
                 )
             }
@@ -152,20 +104,35 @@ fun OnBoarding(navController: NavHostController, sharedPreferences: SharedPrefer
     }
 }
 
-fun onClick(context: Context, sharedPreferences: SharedPreferences, navController: NavHostController,
-            firstName: String, lastName: String, email: String)
-{
-
-    if (firstName.isNotBlank() && lastName.isNotBlank() && email.isNotBlank()) {
-        with(sharedPreferences.edit()) {
-            putBoolean("isLogin", true)
-            putString("first name", firstName)
-            putString("last name", lastName)
-            putString("email", email)
-            apply()
+@Composable
+fun UserDataRow(text: String) {
+    Surface(shape = MaterialTheme.shapes.small,
+        border = BorderStroke(1.dp, LightGrey_highlight),
+        modifier = Modifier.clip(MaterialTheme.shapes.small)
+    ) {
+        Row(
+            Modifier
+                .fillMaxWidth()
+                .padding(top = 12.dp, bottom = 12.dp, start = 12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = text, color = Color.Black,
+                fontFamily = FontFamily(Karla_Regular),
+                fontSize = 16.sp
+            )
         }
-        navController.navigate(com.example.littlelemonapp.navigation.Home.route)
-    } else {
-        Toast.makeText(context, "Registration unsuccessful. Please enter all data.", Toast.LENGTH_SHORT).show()
     }
 }
+
+fun onClick(navController: NavHostController, sharedPreferences: SharedPreferences)
+{
+    sharedPreferences.edit().clear().commit()
+    navController.navigate(Onboarding.route)
+}
+
+//@Preview(showBackground = true)
+//@Composable
+//fun ProfilePreview() {
+//    Profile()
+//}
