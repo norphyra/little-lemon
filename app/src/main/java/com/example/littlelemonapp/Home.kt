@@ -1,6 +1,8 @@
 package com.example.littlelemonapp
 
+import android.widget.GridLayout
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -10,10 +12,13 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredHeight
+import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Divider
@@ -50,14 +55,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.example.littlelemonapp.model.MenuDatabase
 import com.example.littlelemonapp.model.MenuItemEntity
+import com.example.littlelemonapp.model.MenuItemNetwork
 import com.example.littlelemonapp.ui.theme.Green
 import com.example.littlelemonapp.ui.theme.Karla_Bold
 import com.example.littlelemonapp.ui.theme.Karla_ExtraBold
 import com.example.littlelemonapp.ui.theme.Karla_Medium
+import com.example.littlelemonapp.ui.theme.Karla_Regular
 import com.example.littlelemonapp.ui.theme.LightGrey_highlight
 import com.example.littlelemonapp.ui.theme.MarkaziText_Medium
 import com.example.littlelemonapp.ui.theme.MarkaziText_Regular
@@ -65,13 +73,14 @@ import com.example.littlelemonapp.ui.theme.Yellow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Home(navController: NavHostController, menuItems: MutableLiveData<List<MenuItemEntity>>) {
+fun Home(navController: NavHostController, menuItems: MutableLiveData<List<MenuItemNetwork>>) {
 
     val menuCategory = listOf("Starters", "Mains", "Desserts", "Sides")
     val menuItems by menuItems.observeAsState(initial = emptyList())
 
     Column(horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
+        modifier = Modifier.fillMaxWidth()
     ) {
         Row(verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.End,
@@ -91,50 +100,75 @@ fun Home(navController: NavHostController, menuItems: MutableLiveData<List<MenuI
                     })
         }
         Surface(color = Green) {
-            Column(modifier = Modifier.padding(start = 22.dp, end = 22.dp)) {
 
-                var searchValue by remember {
-                    mutableStateOf("")
-                }
+            var searchValue by remember {
+                mutableStateOf("")
+            }
 
-                Text(text = stringResource(id = R.string.title), fontFamily = FontFamily(MarkaziText_Medium),
+            Text(text = stringResource(id = R.string.title), fontFamily = FontFamily(MarkaziText_Medium),
                 fontSize = 64.sp,
-                color = Yellow)
+                color = Yellow,
+                modifier = Modifier.padding(end = 22.dp, start = 22.dp))
 
-                Text(text = stringResource(id = R.string.city), fontFamily = FontFamily(MarkaziText_Regular),
-                    fontSize = 40.sp,
-                    color = Color.White)
+            Column(verticalArrangement = Arrangement.Center,
+                modifier = Modifier
+                    .padding(start = 22.dp, end = 22.dp, top = 60.dp)) {
+//                Text(text = stringResource(id = R.string.title), fontFamily = FontFamily(MarkaziText_Medium),
+//                    fontSize = 64.sp,
+//                    color = Yellow,
+//                    modifier = Modifier.padding(end = 22.dp))
 
-                Row(modifier = Modifier.fillMaxWidth().padding(bottom = 29.dp),
-                horizontalArrangement = Arrangement.SpaceBetween) {
-                    Text(text = stringResource(id = R.string.description),
-                        fontFamily = FontFamily(Karla_Medium),
-                        fontSize = 18.sp,
-                        color = Color.White,
-                    modifier = Modifier.size(231.dp, 105.dp))
-                    Image(painter = painterResource(id = R.drawable.hero_image), contentDescription = "hero image",
-                        Modifier
-                            .clip(RoundedCornerShape(16.dp))
-                            .size(100.dp),
-                    contentScale = ContentScale.Crop)
+                Row(horizontalArrangement = Arrangement.Start,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 29.dp),
+                ) {
+                    Column(Modifier.fillMaxWidth()) {
+
+                        Row(horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth()) {
+                            Column() {
+
+                                Text(text = stringResource(id = R.string.city), fontFamily = FontFamily(MarkaziText_Regular),
+                                    fontSize = 40.sp,
+                                    color = Color.White,
+                                modifier = Modifier.padding(bottom = 12.dp))
+
+                                Text(text = stringResource(id = R.string.description),
+                                    fontFamily = FontFamily(Karla_Medium),
+                                    fontSize = 16.sp,
+                                    textAlign = TextAlign.Start,
+                                    color = Color.White,
+                                    modifier = Modifier
+                                        .fillMaxWidth(0.6f)
+                                        .fillMaxHeight(0.5f))
+                            }
+                            Image(painter = painterResource(id = R.drawable.hero_image), contentDescription = "hero image",
+                                Modifier
+                                    .clip(RoundedCornerShape(16.dp))
+                                    .size(130.dp),
+                                contentScale = ContentScale.Crop,
+                                alignment = Alignment.Center)
+                        }
+                    }
                 }
                 OutlinedTextField(value = searchValue,
                     onValueChange = {searchValue = it},
                     colors = TextFieldDefaults.outlinedTextFieldColors(containerColor = LightGrey_highlight,
-                    focusedBorderColor = Green,
-                    unfocusedBorderColor = Green),
+                        focusedBorderColor = Green,
+                        unfocusedBorderColor = Green),
                     placeholder = {
-                                  Text(
-                                      text = "Enter search phrase",
-                                      color = Green,
-                                      fontFamily = FontFamily(Karla_Medium),
-                                      fontSize = 18.sp,
-                                      modifier = Modifier.fillMaxWidth(),
-                                      textAlign = TextAlign.Center
-                                  )
+                        Text(
+                            text = "Enter search phrase",
+                            color = Green,
+                            fontFamily = FontFamily(Karla_Medium),
+                            fontSize = 18.sp
+                        )
                     },
                     leadingIcon = {
-                                  Image(imageVector = ImageVector.vectorResource(id = R.drawable.search_icon_24), contentDescription = "search icon")
+                        Image(imageVector = ImageVector.vectorResource(id = R.drawable.search_icon_24), contentDescription = "search icon")
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -143,54 +177,62 @@ fun Home(navController: NavHostController, menuItems: MutableLiveData<List<MenuI
                     shape = RoundedCornerShape(8.dp)
                 )
             }
+
         }
 
-        Column(modifier = Modifier.padding(start = 22.dp, end = 22.dp)) {
-            Text(text = "ORDER FOR DELIVERY!", fontFamily = FontFamily(
-                Karla_ExtraBold),
-                fontSize = 24.sp,
-                color = Color.Black,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 10.dp, top = 40.dp, bottom = 15.dp))
-
-            LazyRow(horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 10.dp, end = 10.dp)
-            ) {
-                items(menuCategory) {
-                    MenuCategoryItem(it)
-                }
-            }
-
-            Divider(thickness = 1.dp, color = LightGrey_highlight,
-                modifier = Modifier.padding(top = 30.dp, bottom = 30.dp))
-        }
-
-        LazyColumn {
-            items(menuItems) {
-                Dish(it)
-            }
-        }
+//        Column(modifier = Modifier.padding(start = 22.dp, end = 22.dp)) {
+//            Text(text = "ORDER FOR DELIVERY!", fontFamily = FontFamily(
+//                Karla_ExtraBold),
+//                fontSize = 24.sp,
+//                color = Color.Black,
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .padding(start = 10.dp, top = 40.dp, bottom = 15.dp))
+//
+//            LazyRow(horizontalArrangement = Arrangement.SpaceBetween,
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .padding(start = 10.dp, end = 10.dp)
+//            ) {
+//                items(menuCategory) {
+//                    MenuCategoryItem(it)
+//                }
+//            }
+//
+//            Divider(thickness = 1.dp, color = LightGrey_highlight,
+//                modifier = Modifier.padding(top = 30.dp, bottom = 15.dp))
+//        }
+//
+//        LazyColumn {
+//            items(menuItems) {
+//                Dish(it)
+//            }
+//        }
 
     }
 }
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun Dish(item: MenuItemEntity) {
+fun Dish(item: MenuItemNetwork) {
 
     println(item)
 
     Column {
-        Text(text = item.title)
+        Text(text = item.title,
+            fontFamily = FontFamily(Karla_Bold),
+            fontSize = 18.sp,
+        modifier = Modifier.padding(bottom = 15.dp))
         Row {
            Column() {
-               Text(text = item.description)
-               Text(text = item.price)
+               Text(text = item.description, color = Green,
+                   fontFamily = FontFamily(Karla_Regular),
+                   fontSize = 16.sp)
+               Text(text = "$${item.price}", color = Green,
+                   fontFamily = FontFamily(Karla_Medium),
+                   fontSize = 18.sp)
            }
-            GlideImage(model = item.image, contentDescription = item.title)
+//            GlideImage(model = item.image, contentDescription = item.title)
         }
     }
 
@@ -213,8 +255,13 @@ fun MenuCategoryItem(category: String) {
 
 
 
-//@Preview(showBackground = true)
-//@Composable
-//fun HomePreview() {
-//    Home()
-//}
+@Preview(showBackground = true)
+@Composable
+fun HomePreview() {
+    val navController = rememberNavController()
+
+    val items = MutableLiveData(listOf(MenuItemNetwork(0, "", "", "", "", "")))
+
+
+    Home(navController, items)
+}

@@ -13,9 +13,10 @@ import com.example.littlelemonapp.OnBoarding
 import com.example.littlelemonapp.Profile
 import com.example.littlelemonapp.model.MenuDatabase
 import com.example.littlelemonapp.model.MenuItemEntity
+import com.example.littlelemonapp.model.MenuItemNetwork
 
 @Composable
-fun Navigation(navController: NavHostController, sharedPreferences: SharedPreferences, menuItems: MutableLiveData<List<MenuItemEntity>>) {
+fun Navigation(navController: NavHostController, sharedPreferences: SharedPreferences, menuItems: MutableLiveData<List<MenuItemNetwork>>) {
 
     var startDestination = Onboarding.route
 

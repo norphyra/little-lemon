@@ -20,8 +20,8 @@ val Typography = Typography(
     ),
 )
 
-val MarkaziText_Medium = Font(R.font.markazitext_medium, FontWeight.W500, FontStyle.Normal)
-val MarkaziText_Regular = Font(R.font.markazitext_regular, FontWeight.W400, FontStyle.Normal)
+val MarkaziText_Medium = Font(R.font.markazitext_medium, FontWeight.W500)
+val MarkaziText_Regular = Font(R.font.markazitext_regular, FontWeight.W400)
 
 val Karla_Regular = Font(R.font.karla_regular, FontWeight.W400, FontStyle.Normal)
 val Karla_Medium = Font(R.font.karla_medium, FontWeight.W500, FontStyle.Normal)

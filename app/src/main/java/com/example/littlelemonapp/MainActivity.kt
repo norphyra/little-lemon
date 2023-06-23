@@ -17,7 +17,9 @@ import androidx.navigation.compose.rememberNavController
 import androidx.room.Room
 import com.example.littlelemonapp.model.MenuDatabase
 import com.example.littlelemonapp.model.MenuItemEntity
+import com.example.littlelemonapp.model.MenuItemNetwork
 import com.example.littlelemonapp.model.MenuNetwork
+import com.example.littlelemonapp.model.transformFromResponseToDB
 import com.example.littlelemonapp.navigation.Navigation
 import com.example.littlelemonapp.ui.theme.LittleLemonAppTheme
 import io.ktor.client.HttpClient
@@ -34,7 +36,7 @@ import kotlinx.coroutines.withContext
 
 class MainActivity : ComponentActivity() {
 
-    private val menuLiveData = MutableLiveData<List<MenuItemEntity>>()
+    private val menuLiveData = MutableLiveData<List<MenuItemNetwork>>()
 
     private val sharedPreferences by lazy {getSharedPreferences("LittleLemon", MODE_PRIVATE)}
 
@@ -59,7 +61,7 @@ class MainActivity : ComponentActivity() {
             val response = getMenu()
 
             withContext(IO) {
-                database.menuDao().saveMenuItem(response)
+                database.menuDao().saveMenuItem(transformFromResponseToDB(response))
             }
 
             runOnUiThread {
@@ -84,7 +86,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private suspend fun getMenu(): List<MenuItemEntity> {
+    private suspend fun getMenu(): List<MenuItemNetwork> {
 
         return client.get("https://raw.githubusercontent.com/Meta-Mobile-Developer-PC/Working-With-Data-API/main/menu.json")
             .body<MenuNetwork>().menu
