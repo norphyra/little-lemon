@@ -15,8 +15,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -38,6 +42,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -55,6 +60,7 @@ import com.example.littlelemonapp.ui.theme.LightGrey_highlight
 import com.example.littlelemonapp.ui.theme.MarkaziText_Medium
 import com.example.littlelemonapp.ui.theme.MarkaziText_Regular
 import com.example.littlelemonapp.ui.theme.Yellow
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -67,6 +73,11 @@ fun Home(navController: NavHostController, menuItems: MutableLiveData<List<MenuI
             verticalArrangement = Arrangement.Center,
         modifier = Modifier.fillMaxWidth()
     ) {
+
+        var searchPhrase by remember {
+            mutableStateOf("")
+        }
+
         Row(verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.End,
             modifier = Modifier
@@ -85,10 +96,6 @@ fun Home(navController: NavHostController, menuItems: MutableLiveData<List<MenuI
                     })
         }
         Surface(color = Green) {
-
-            var searchValue by remember {
-                mutableStateOf("")
-            }
 
             Text(text = stringResource(id = R.string.title), fontFamily = FontFamily(MarkaziText_Medium),
                 fontSize = 64.sp,
@@ -133,8 +140,9 @@ fun Home(navController: NavHostController, menuItems: MutableLiveData<List<MenuI
                             .size(140.dp)
                     )
                 }
-                OutlinedTextField(value = searchValue,
-                    onValueChange = {searchValue = it},
+
+                OutlinedTextField(value = searchPhrase,
+                    onValueChange = {searchPhrase = it},
                     colors = TextFieldDefaults.outlinedTextFieldColors(containerColor = LightGrey_highlight,
                         focusedBorderColor = Green,
                         unfocusedBorderColor = Green),
@@ -147,13 +155,14 @@ fun Home(navController: NavHostController, menuItems: MutableLiveData<List<MenuI
                             textAlign = TextAlign.Center
                         )
                     },
-                    leadingIcon = {
-                        Image(imageVector = ImageVector.vectorResource(id = R.drawable.search_icon_24), contentDescription = "search icon")
+                    leadingIcon =
+                        { Icon( imageVector = Icons.Default.Search, contentDescription = "",)
                     },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 25.dp),
-                    shape = RoundedCornerShape(8.dp)
+                    shape = RoundedCornerShape(8.dp),
+                    singleLine = true
                 )
             }
 
@@ -185,7 +194,8 @@ fun Home(navController: NavHostController, menuItems: MutableLiveData<List<MenuI
             .padding(start = 20.dp, end = 20.dp),
         verticalArrangement = Arrangement.spacedBy(15.dp)
         ) {
-            items(menuItems) {
+            items(menuItems.filter { it.title.lowercase(Locale.ROOT).contains(searchPhrase)
+            }) {
                 Dish(it)
             }
         }
