@@ -4,6 +4,7 @@ import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.example.littlelemonapp.R
@@ -22,10 +23,10 @@ val Typography = Typography(
 val MarkaziText_Medium = Font(R.font.markazitext_medium, FontWeight.W500)
 val MarkaziText_Regular = Font(R.font.markazitext_regular, FontWeight.W400)
 
-val Karla_Regular = Font(R.font.karla_regular, FontWeight.W400)
-val Karla_Medium = Font(R.font.karla_medium, FontWeight.W500)
-val Karla_Bold = Font(R.font.karla_bold, FontWeight.W700)
-val Karla_ExtraBold = Font(R.font.karla_extrabold, FontWeight.W800)
+val Karla_Regular = Font(R.font.karla_regular, FontWeight.W400, FontStyle.Normal)
+val Karla_Medium = Font(R.font.karla_medium, FontWeight.W500, FontStyle.Normal)
+val Karla_Bold = Font(R.font.karla_bold, FontWeight.W700, FontStyle.Normal)
+val Karla_ExtraBold = Font(R.font.karla_extrabold, FontWeight.W800, FontStyle.Normal)
 
 
 val TitleTypography = Typography(
