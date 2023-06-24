@@ -1,6 +1,7 @@
 package com.example.littlelemonapp.model
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.room.Dao
 import androidx.room.Database
 import androidx.room.Delete
@@ -24,7 +25,10 @@ data class MenuItemEntity(
 @Dao
 interface MenuDao {
     @Query("SELECT * FROM MenuItemEntity")
-    fun getAllMenuItems(): LiveData<List<MenuItemEntity>>
+    fun getAllMenuItems(): List<MenuItemEntity>
+
+    @Query("SELECT * FROM MenuItemEntity WHERE category = :category")
+    fun getMenuItemsByCategory(category: String): List<MenuItemEntity>
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

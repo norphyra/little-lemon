@@ -1,5 +1,6 @@
 package com.example.littlelemonapp
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.icons.Icons
@@ -35,21 +37,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
+import com.example.littlelemonapp.model.MenuDatabase
+import com.example.littlelemonapp.model.MenuItemEntity
 import com.example.littlelemonapp.model.MenuItemNetwork
 import com.example.littlelemonapp.ui.theme.Green
 import com.example.littlelemonapp.ui.theme.Karla_Bold
@@ -64,10 +66,14 @@ import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Home(navController: NavHostController, menuItems: MutableLiveData<List<MenuItemNetwork>>) {
+fun Home(navController: NavHostController, menuItems: LiveData<List<MenuItemEntity>>, onClick: (String) -> Unit) {
 
     val menuCategory = listOf("Starters", "Mains", "Desserts", "Sides")
     val menuItems by menuItems.observeAsState(initial = emptyList())
+
+    var selectedCategory by remember {
+        mutableStateOf("")
+    }
 
     Column(horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
@@ -180,9 +186,10 @@ fun Home(navController: NavHostController, menuItems: MutableLiveData<List<MenuI
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 20.dp, end = 20.dp)
+
         ) {
             items(menuCategory) {
-                MenuCategoryItem(it)
+                MenuCategoryItem(it, onClick)
             }
         }
 
@@ -194,7 +201,7 @@ fun Home(navController: NavHostController, menuItems: MutableLiveData<List<MenuI
             .padding(start = 20.dp, end = 20.dp),
         verticalArrangement = Arrangement.spacedBy(15.dp)
         ) {
-            items(menuItems.filter { it.title.lowercase(Locale.ROOT).contains(searchPhrase)
+            items(menuItems.filter { it.title.contains(searchPhrase, ignoreCase = true)
             }) {
                 Dish(it)
             }
@@ -204,11 +211,12 @@ fun Home(navController: NavHostController, menuItems: MutableLiveData<List<MenuI
 }
 
 @Composable
-fun Dish(item: MenuItemNetwork) {
+fun Dish(item: MenuItemEntity) {
     Column(
         Modifier
             .wrapContentHeight()
-            .fillMaxWidth()) {
+            .fillMaxWidth()
+            ) {
         Text(text = item.title,
             fontFamily = FontFamily(Karla_Bold),
             fontSize = 18.sp,
@@ -219,7 +227,8 @@ fun Dish(item: MenuItemNetwork) {
             , modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()) {
-           Column(modifier = Modifier.padding(end = 8.dp)
+           Column(modifier = Modifier
+               .padding(end = 8.dp)
                .weight(1f)) {
                Text(text = item.description, color = Green,
                    fontFamily = FontFamily(Karla_Regular),
@@ -240,8 +249,11 @@ fun Dish(item: MenuItemNetwork) {
 }
 
 @Composable
-fun MenuCategoryItem(category: String) {
-    Surface(shape = RoundedCornerShape(12.dp), color = LightGrey_highlight) {
+fun MenuCategoryItem(category: String, onClick: (String) -> Unit) {
+    Surface(shape = RoundedCornerShape(12.dp), color = LightGrey_highlight,
+    modifier = Modifier.clickable {
+        onClick(category.lowercase())
+    }) {
         Text(
             text = category, fontFamily = FontFamily(
                 Karla_Bold
@@ -250,6 +262,7 @@ fun MenuCategoryItem(category: String) {
             color = Green,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(start = 9.dp, end = 9.dp, top = 7.dp, bottom = 7.dp)
+
         )
     }
 }
@@ -267,5 +280,5 @@ fun HomePreview() {
         MenuItemNetwork(3, "Greek Salad", "The famous greek salad of crispy lettuce, peppers, olives, our Chicago.", "10", "https://github.com/Meta-Mobile-Developer-PC/Working-With-Data-API/blob/main/images/greekSalad.jpg?raw=true", "starters")))
 
 
-    Home(navController, items)
+//    Home(navController, items)
 }
