@@ -1,18 +1,14 @@
 package com.example.littlelemonapp.navigation
 
 import android.content.SharedPreferences
-import androidx.activity.ComponentActivity
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.MutableLiveData
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.littlelemonapp.Home
 import com.example.littlelemonapp.OnBoarding
 import com.example.littlelemonapp.Profile
-import com.example.littlelemonapp.model.MenuDatabase
-import com.example.littlelemonapp.model.MenuItemEntity
 import com.example.littlelemonapp.model.MenuItemNetwork
 
 @Composable

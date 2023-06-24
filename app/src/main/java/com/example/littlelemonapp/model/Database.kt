@@ -10,8 +10,6 @@ import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
 import androidx.room.Query
 import androidx.room.RoomDatabase
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
 
 @Entity
 data class MenuItemEntity(
@@ -43,7 +41,7 @@ abstract class MenuDatabase: RoomDatabase() {
 }
 
 fun transformFromResponseToDB(response: List<MenuItemNetwork>): List<MenuItemEntity> {
-    var result = mutableListOf<MenuItemEntity>()
+    val result = mutableListOf<MenuItemEntity>()
 
     response.forEach {
         result.add(
