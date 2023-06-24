@@ -10,11 +10,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
 import androidx.room.Room
 import com.example.littlelemonapp.model.MenuDatabase
+import com.example.littlelemonapp.model.MenuItemEntity
 import com.example.littlelemonapp.model.MenuItemNetwork
 import com.example.littlelemonapp.model.MenuNetwork
 import com.example.littlelemonapp.model.transformFromResponseToDB
@@ -33,7 +35,7 @@ import kotlinx.coroutines.withContext
 
 class MainActivity : ComponentActivity() {
 
-    private val menuLiveData = MutableLiveData<List<MenuItemNetwork>>()
+    private var menuLiveData = MutableLiveData<List<MenuItemEntity>>()
 
     private val sharedPreferences by lazy {getSharedPreferences("LittleLemon", MODE_PRIVATE)}
 
@@ -57,12 +59,14 @@ class MainActivity : ComponentActivity() {
         lifecycleScope.launch{
             val response = getMenu()
 
+            val responseToDb = transformFromResponseToDB(response)
+
             withContext(IO) {
-                database.menuDao().saveMenuItem(transformFromResponseToDB(response))
+                database.menuDao().saveMenuItem(responseToDb)
             }
 
             runOnUiThread {
-                menuLiveData.value = response
+                menuLiveData.value = responseToDb
             }
         }
 
@@ -76,7 +80,8 @@ class MainActivity : ComponentActivity() {
 
                     val navController = rememberNavController()
 
-                    Navigation(navController = navController, sharedPreferences = sharedPreferences, menuItems = menuLiveData)
+                    Navigation(navController = navController, sharedPreferences = sharedPreferences,
+                        menuItems = menuLiveData, onClick = ::onClick)
 
                 }
             }
@@ -89,6 +94,16 @@ class MainActivity : ComponentActivity() {
             .body<MenuNetwork>().menu
 
     }
+    fun onClick(category: String) {
+        lifecycleScope.launch(IO) {
+            val result = database.menuDao().getMenuItemsByCategory(category)
+            println(result)
+            runOnUiThread{
+                menuLiveData.value = result
+            }
+        }
+    }
+
 }
 
 @Composable
