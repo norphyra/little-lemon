@@ -3,7 +3,6 @@ package com.example.littlelemonapp.navigation
 import android.content.SharedPreferences
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -11,11 +10,11 @@ import com.example.littlelemonapp.Home
 import com.example.littlelemonapp.OnBoarding
 import com.example.littlelemonapp.Profile
 import com.example.littlelemonapp.model.MenuItemEntity
-import com.example.littlelemonapp.model.MenuItemNetwork
 
 @Composable
-fun Navigation(navController: NavHostController, sharedPreferences: SharedPreferences,
-               menuItems: LiveData<List<MenuItemEntity>>, onClick: (String) -> Unit) {
+fun Navigation(
+    navController: NavHostController, sharedPreferences: SharedPreferences,
+    menuItems: LiveData<List<MenuItemEntity>>, onClick: (String) -> Unit) {
 
     var startDestination = Onboarding.route
 
