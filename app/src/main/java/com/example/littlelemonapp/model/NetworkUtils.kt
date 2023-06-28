@@ -5,13 +5,10 @@ import io.ktor.client.engine.android.Android
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.http.ContentType
 import io.ktor.serialization.kotlinx.json.json
+import retrofit2.http.GET
 import javax.inject.Inject
 
-class NetworkUtils @Inject constructor(){
-
-    public val client = HttpClient(Android) {
-        install(ContentNegotiation) {
-            json(contentType = ContentType("text", "plain"))
-        }
-    }
+interface NetworkUtils {
+    @GET("menu.json")
+    suspend fun getMenuItems(): MenuNetwork
 }

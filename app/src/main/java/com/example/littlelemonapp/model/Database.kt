@@ -11,6 +11,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
 import androidx.room.Query
 import androidx.room.RoomDatabase
+import kotlinx.coroutines.flow.Flow
 
 @Entity
 data class MenuItemEntity(
@@ -28,11 +29,11 @@ interface MenuDao {
     fun getAllMenuItems(): List<MenuItemEntity>
 
     @Query("SELECT * FROM MenuItemEntity WHERE category = :category")
-    fun getMenuItemsByCategory(category: String): List<MenuItemEntity>
+    suspend fun getMenuItemsByCategory(category: String): List<MenuItemEntity>
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun saveMenuItem(menuItems: List<MenuItemEntity>)
+    suspend fun saveMenuItem(menuItems: List<MenuItemEntity>)
 
 
     @Delete

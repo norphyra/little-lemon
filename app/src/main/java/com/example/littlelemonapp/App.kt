@@ -1,6 +1,7 @@
 package com.example.littlelemonapp
 
 import android.app.Application
+import android.content.Context
 import com.example.littlelemonapp.dagger.AppComponent
 import com.example.littlelemonapp.dagger.AppModule
 import com.example.littlelemonapp.dagger.DaggerAppComponent
@@ -19,3 +20,9 @@ class App: Application() {
     }
 
 }
+
+val Context.appComponent: AppComponent
+    get() = when(this) {
+        is App -> appComponent
+        else -> this.applicationContext.appComponent
+    }
