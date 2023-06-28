@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.navigation.compose.rememberNavController
@@ -40,9 +41,7 @@ class MainActivity : ComponentActivity() {
 
     @Inject lateinit var sharedPreferences: SharedPreferences
 
-    @Inject lateinit var viewModelFactory: MenuViewModel.MenuViewModelFactory.Factory
-
-    private val viewModel: MenuViewModel by viewModels { viewModelFactory.create() }
+    @Inject lateinit var viewModel: MenuViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
